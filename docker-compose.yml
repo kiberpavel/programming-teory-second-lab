@@ -1,0 +1,29 @@
+version: "3.3"
+
+services:
+    nginx:
+        image: nginx
+        build:
+            context: .
+            dockerfile: docker/Nginx.Dockerfile
+        ports:
+            - "70:70"
+        depends_on:
+            -   fpm
+        links:
+            - fpm
+        volumes:
+            - ./:/var/www/app
+    fpm:
+        build:
+            context: .
+            dockerfile: docker/Fpm.Dockerfile
+        ports:
+            - "9000:9000"
+        environment:
+            XDEBUG_CLIENT_HOST: 172.17.0.1
+            XDEBUG_CLIENT PORT: 9003
+            PHP_IDE_CONFIG: "serverName=Docker"
+            XDEBUG_SESSION: "PHPSTORM"
+        volumes:
+            - ./:/var/www/app
